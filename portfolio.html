@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shawn Fernandes | Creative Frontend Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0f1f;
+      --bg-2: #0f1530;
+      --glass: rgba(18, 24, 48, 0.45);
+      --glass-2: rgba(18, 24, 48, 0.7);
+      --stroke: rgba(255, 255, 255, 0.08);
+      --text: #e6ecff;
+      --muted: #a6b1d6;
+      --neon-1: #7b5cff;
+      --neon-2: #27d3ff;
+      --neon-3: #5a7bff;
+      --shadow: 0 24px 80px rgba(12, 16, 40, 0.65);
+      --radius: 18px;
+      --radius-lg: 28px;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 10% 10%, rgba(123, 92, 255, 0.2), transparent 60%),
+                  radial-gradient(1000px 700px at 90% 20%, rgba(39, 211, 255, 0.18), transparent 55%),
+                  linear-gradient(180deg, #0a0d1b 0%, #0b1022 40%, #0a0f1d 100%);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .noise::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' /%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .grid-bg::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(800px 400px at 20% 20%, #000 35%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section {
+      padding: 90px 0;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
+      font-weight: 600;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title span {
+      color: var(--neon-2);
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, rgba(123, 92, 255, 0.3), rgba(39, 211, 255, 0.3));
+      color: var(--text);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 16px 40px rgba(39, 211, 255, 0.25); }
+
+    .btn .ripple {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent 70%);
+      transform: translate(-50%, -50%) scale(0);
+      animation: ripple 0.8s ease forwards;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+
+    .magnetic { transition: transform 0.2s ease; }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      padding-top: 120px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 4vw, 4.4rem);
+      line-height: 1.05;
+      margin: 14px 0 16px;
+    }
+
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 520px; }
+
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 26px; }
+
+    .hero-visual {
+      position: relative;
+      padding: 32px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(123, 92, 255, 0.12), rgba(39, 211, 255, 0.08));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: 420px;
+    }
+
+    .avatar {
+      width: 220px;
+      aspect-ratio: 1;
+      border-radius: 32px;
+      background: linear-gradient(160deg, rgba(123, 92, 255, 0.6), rgba(39, 211, 255, 0.6));
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin: 0 auto;
+      box-shadow: 0 20px 50px rgba(39, 211, 255, 0.3);
+    }
+
+    .floating-icons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(90px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .icon-pill {
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: var(--glass-2);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .blob {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(123, 92, 255, 0.45), transparent 70%);
+      filter: blur(20px);
+      z-index: -1;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .blob.two {
+      right: -60px;
+      bottom: -40px;
+      background: radial-gradient(circle, rgba(39, 211, 255, 0.35), transparent 70%);
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+    }
+
+    .bento-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .bento-card {
+      padding: 24px;
+      border-radius: var(--radius);
+      position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      min-height: 160px;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(123, 92, 255, 0.2);
+    }
+
+    .bento-card h3 { margin: 0 0 10px; }
+
+    .about-grid {
+      display: grid;
+      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      align-items: center;
+    }
+
+    .profile-frame {
+      border-radius: 28px;
+      padding: 16px;
+      background: linear-gradient(145deg, rgba(123, 92, 255, 0.25), rgba(39, 211, 255, 0.15));
+    }
+
+    .profile-frame img { border-radius: 22px; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.85rem;
+    }
+
+    .progress {
+      margin-top: 18px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-1), var(--neon-2));
+      width: 0;
+      border-radius: inherit;
+      transition: width 1s ease;
+    }
+
+    .projects-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .project-card {
+      overflow: hidden;
+      position: relative;
+      padding: 0;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .project-card:hover { transform: translateY(-6px); box-shadow: 0 22px 60px rgba(39, 211, 255, 0.2); }
+
+    .project-image {
+      height: 180px;
+      background: linear-gradient(120deg, rgba(123, 92, 255, 0.4), rgba(39, 211, 255, 0.4));
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(10, 12, 24, 0.8));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-image::after { opacity: 1; }
+
+    .project-content { padding: 18px 20px 22px; }
+
+    .project-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+    .timeline {
+      position: relative;
+      margin-top: 30px;
+      padding-left: 26px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 0;
+      width: 2px;
+      height: 0;
+      background: linear-gradient(180deg, var(--neon-1), var(--neon-2));
+      transition: height 1.2s ease;
+    }
+
+    .timeline.is-visible::before { height: 100%; }
+
+    .timeline-item {
+      margin-bottom: 26px;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(10, 14, 28, 0.55);
+    }
+
+    .testimonials {
+      overflow: hidden;
+    }
+
+    .testimonials-track {
+      display: flex;
+      gap: 18px;
+      transition: transform 0.6s ease;
+    }
+
+    .testimonial-card {
+      min-width: 280px;
+      padding: 20px;
+    }
+
+    .services-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .service-card {
+      padding: 24px;
+    }
+
+    .contact-grid {
+      display: grid;
+      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      align-items: center;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(8, 12, 24, 0.8);
+      color: var(--text);
+      font-family: "Sora", system-ui, sans-serif;
+    }
+
+    .socials { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    footer {
+      padding: 40px 0 60px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .footer-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      align-items: center;
+    }
+
+    .back-to-top {
+      justify-self: end;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .counter {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .pill-list { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #070a16;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top: 2px solid var(--neon-2);
+      animation: spin 1.2s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    canvas#particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    @media (max-width: 800px) {
+      .hero { padding-top: 100px; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .back-to-top { justify-self: start; }
+    }
+  </style>
+</head>
+<body class="noise grid-bg">
+  <div class="loading-screen" id="loading">
+    <div class="loader"></div>
+  </div>
+  <canvas id="particles"></canvas>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span style="letter-spacing: .3em; color: var(--neon-2); font-size: .85rem;">WELCOME</span>
+          <h1>Hi, I'm <span style="color: var(--neon-1);">Shawn</span></h1>
+          <h2 style="margin-top: 6px; font-weight: 600;">Creative Frontend Developer</h2>
+          <p>I design and build high-impact digital experiences that feel premium, performant, and unmistakably modern.</p>
+          <div class="hero-actions">
+            <a class="btn magnetic" href="#projects">View Projects</a>
+            <a class="btn secondary magnetic" href="#contact">Contact Me</a>
+          </div>
+        </div>
+        <div class="hero-visual glass reveal parallax" data-depth="10">
+          <div class="blob"></div>
+          <div class="blob two"></div>
+          <div class="avatar">3D DEV AVATAR</div>
+          <div class="floating-icons">
+            <div class="icon-pill">React</div>
+            <div class="icon-pill">JavaScript</div>
+            <div class="icon-pill">Tailwind</div>
+            <div class="icon-pill">Node.js</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title"><span>BENTO</span> Highlights</div>
+        <div class="bento-grid">
+          <div class="bento-card glass reveal">
+            <div class="counter" data-target="still trying to gain it">0</div>
+            <p>Years of Experience</p>
+          </div>
+          <div class="bento-card glass reveal">
+            <h3>Technologies</h3>
+            <div class="pill-list">
+              <span class="tag">Next.js</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">Framer Motion</span>
+            </div>
+          </div>
+          <div class="bento-card glass reveal">
+            <h3>Availability</h3>
+            <p>Open for freelance and product partnerships.</p>
+          </div>
+          <div class="bento-card glass reveal">
+            <h3>GitHub Stats</h3>
+            <p>1.2k+ stars � 45 public repos</p>
+          </div>
+          <div class="bento-card glass reveal">
+            <h3>Currently Learning</h3>
+            <p>java script ,mongo db</p>
+          </div>
+          <div class="bento-card glass reveal">
+            <h3>Location</h3>
+            <p>vasai east near dreamland hotel</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div class="profile-frame glass reveal">
+          <img src="shawn.jpeg" alt="Profile" />
+        </div>
+        <div class="reveal">
+          <div class="section-title"><span>ABOUT</span> Me</div>
+          <p>I build scalable, delightful interfaces with a focus on motion, performance, and accessibility. My work blends engineering precision with a strong visual sense.</p>
+          <div class="tag-row">
+            <span class="tag">Design Systems</span>
+            <span class="tag">Animation</span>
+            <span class="tag">Performance</span>
+            <span class="tag">Accessibility</span>
+          </div>
+          <div class="progress">
+            <div>UI Engineering</div>
+            <div class="progress-bar"><span data-progress="92"></span></div>
+          </div>
+          <div class="progress">
+            <div>Motion Design</div>
+            <div class="progress-bar"><span data-progress="85"></span></div>
+          </div>
+          <div class="progress">
+            <div>System Architecture</div>
+            <div class="progress-bar"><span data-progress="78"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-title"><span>WORK</span> Featured Projects</div>
+        <div class="projects-grid">
+          <div class="project-card glass reveal">
+            <div class="project-image">Aurora Commerce</div>
+            <div class="project-content">
+              <h3>Luxury E-commerce Platform</h3>
+              <p>Immersive shopping with smooth transitions, product storytelling, and lightning-fast checkout.</p>
+              <div class="pill-list">
+                <span class="tag">Next.js</span>
+                <span class="tag">Stripe</span>
+                <span class="tag">GSAP</span>
+              </div>
+              <div class="project-actions">
+                <a class="btn secondary" href="#">Live Demo</a>
+                <a class="btn" href="#">GitHub</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card glass reveal">
+            <div class="project-image">Nebula Studio</div>
+            <div class="project-content">
+              <h3>Creative Agency Website</h3>
+              <p>Editorial layouts, parallax depth, and micro-interactions inspired by award-winning sites.</p>
+              <div class="pill-list">
+                <span class="tag">React</span>
+                <span class="tag">Framer Motion</span>
+                <span class="tag">Vercel</span>
+              </div>
+              <div class="project-actions">
+                <a class="btn secondary" href="#">Live Demo</a>
+                <a class="btn" href="#">GitHub</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card glass reveal">
+            <div class="project-image">Pulse Analytics</div>
+            <div class="project-content">
+              <h3>Realtime SaaS Dashboard</h3>
+              <p>Data-rich dashboards with animated charts, advanced filters, and team collaboration.</p>
+              <div class="pill-list">
+                <span class="tag">TypeScript</span>
+                <span class="tag">D3.js</span>
+                <span class="tag">Node.js</span>
+              </div>
+              <div class="project-actions">
+                <a class="btn secondary" href="#">Live Demo</a>
+                <a class="btn" href="#">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section-title"><span>JOURNEY</span> Experience</div>
+        <div class="timeline reveal" id="timeline">
+          <div class="timeline-item">
+            <h3>Nova Labs</h3>
+            <p>Lead Frontend Engineer � 2023 - Present</p>
+            <p>Architected design system, improved performance by 42%, and mentored a team of 6.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>Helios Studio</h3>
+            <p>Senior UI Engineer � 2020 - 2023</p>
+            <p>Crafted award-winning microsites and experimental UI prototypes.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>Orbital</h3>
+            <p>Frontend Developer � 2018 - 2020</p>
+            <p>Built responsive product interfaces and performed UX research sprints.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="testimonials">
+      <div class="container">
+        <div class="section-title"><span>TRUST</span> Testimonials</div>
+        <div class="testimonials glass reveal">
+          <div class="testimonials-track" id="testimonial-track">
+            <div class="testimonial-card glass">
+              <p>"Impeccable motion and UI polish. Our conversion rate jumped immediately."</p>
+              <strong>� Alicia M.</strong>
+            </div>
+            <div class="testimonial-card glass">
+              <p>"A strategic partner who elevates both brand and performance."</p>
+              <strong>� Damon K.</strong>
+            </div>
+            <div class="testimonial-card glass">
+              <p>"Delivered ahead of schedule with pixel-perfect detail."</p>
+              <strong>� Priya S.</strong>
+            </div>
+            <div class="testimonial-card glass">
+              <p>"The site feels alive. Smooth, fast, and beautifully engineered."</p>
+              <strong>� Jordan R.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-title"><span>SERVICES</span> My Approach</div>
+        <div class="services-grid">
+          <div class="service-card glass reveal">
+            <h3>Frontend Development</h3>
+            <p>Component-driven architecture with scalable design systems.</p>
+          </div>
+          <div class="service-card glass reveal">
+            <h3>Backend Development</h3>
+            <p>APIs, real-time services, and cloud-first deployments.</p>
+          </div>
+          <div class="service-card glass reveal">
+            <h3>UI/UX Design</h3>
+            <p>Human-centered flows, visual storytelling, and high fidelity prototyping.</p>
+          </div>
+          <div class="service-card glass reveal">
+            <h3>Performance Optimization</h3>
+            <p>Metrics-led improvements, best-in-class Lighthouse scores.</p>
+          </div>
+        </div>
+      </div> 
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container contact-grid">
+        <div class="reveal">
+          <div class="section-title"><span>CONTACT</span> Let's Build</div>
+          <p>Tell me about your idea and I will respond within 24 hours.</p>
+          <div class="socials">
+            <a class="tag" href="https://github.com/shawnfernandes623-bot">GitHub</a>
+            <a class="tag" href="https://www.linkedin.com/in/shawn-fernandes-33542a384/">LinkedIn</a>
+            
+           
+          </div>
+        </div>
+    <form class="contact-form glass reveal"
+  action="https://formspree.io/f/mzdabvvz"
+  method="POST">
+          <input type="text" name="name" placeholder="Name" />
+          <input type="email" name="email" placeholder="Email" />
+          <textarea name="message" rows="4"  placeholder="Message"></textarea>
+          <button class="btn magnetic" type="submit">Send Message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <strong>Shawn Fernandes</strong>
+        <p style="color: var(--muted);">Creative Frontend Developer</p>
+      </div>
+      <div>
+        <a class="tag" href="#about">About</a>
+        <a class="tag" href="#projects">Projects</a>
+        <a class="tag" href="#contact">Contact</a>
+      </div>
+      <div class="back-to-top">
+        <a class="btn secondary" href="#top">Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const loading = document.getElementById('loading');
+    window.addEventListener('load', () => {
+      setTimeout(() => loading.classList.add('hidden'), 500);
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.2 });
+    reveals.forEach((el) => observer.observe(el));
+
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach((counter) => {
+      const update = () => {
+        const target = Number(counter.dataset.target || 0);
+        const value = Number(counter.innerText);
+        const increment = Math.max(1, Math.floor(target / 40));
+        if (value < target) {
+          counter.innerText = Math.min(target, value + increment);
+          requestAnimationFrame(update);
+        }
+      };
+      observer.observe(counter);
+      counter.addEventListener('transitionend', update);
+      update();
+    });
+
+    const progressBars = document.querySelectorAll('.progress-bar span');
+    progressBars.forEach((bar) => {
+      const target = bar.dataset.progress || 0;
+      observer.observe(bar);
+      bar.addEventListener('transitionend', () => {});
+      setTimeout(() => { bar.style.width = target + '%'; }, 1200);
+    });
+
+    const magneticButtons = document.querySelectorAll('.magnetic');
+    magneticButtons.forEach((btn) => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+      btn.addEventListener('click', (e) => {
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = e.offsetX + 'px';
+        ripple.style.top = e.offsetY + 'px';
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 800);
+      });
+    });
+
+    const parallaxItems = document.querySelectorAll('.parallax');
+    document.addEventListener('mousemove', (e) => {
+      parallaxItems.forEach((item) => {
+        const depth = Number(item.dataset.depth || 10);
+        const x = (window.innerWidth / 2 - e.clientX) / (depth * 10);
+        const y = (window.innerHeight / 2 - e.clientY) / (depth * 10);
+        item.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    });
+
+    const track = document.getElementById('testimonial-track');
+    let index = 0;
+    setInterval(() => {
+      const cardWidth = track.children[0].offsetWidth + 18;
+      index = (index + 1) % track.children.length;
+      track.style.transform = `translateX(-${index * cardWidth}px)`;
+    }, 3200);
+
+    const timeline = document.getElementById('timeline');
+    if (timeline) observer.observe(timeline);
+
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    const createParticles = () => {
+      particles = Array.from({ length: 60 }).map(() => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2 + 0.5,
+      }));
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(123, 92, 255, 0.5)';
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    };
+
+    createParticles();
+    animate();
+  </script>
+</body>
+</html>
